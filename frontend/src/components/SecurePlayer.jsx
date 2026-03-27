@@ -20,9 +20,9 @@ const SecurePlayer = ({ url, type, contentId }) => {
 
   if (type === 'Document') {
     const token = (() => { try { return JSON.parse(localStorage.getItem('auth-storage'))?.state?.token; } catch(_) { return ''; } })();
-    const streamUrl = contentId 
+    const streamUrl = (contentId 
       ? `https://iam-an-artist-backend.onrender.com/api/content/${contentId}/stream?token=${token}`
-      : url;
+      : url) + '#toolbar=0&navpanes=0&scrollbar=1';
 
     const heights = { compact: '45vh', normal: '75vh', full: '92vh' };
     const iframeHeight = heights[pdfSize];
