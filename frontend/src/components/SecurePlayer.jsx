@@ -16,10 +16,11 @@ const SecurePlayer = ({ url, type }) => {
   }, []);
 
   if (type === 'Document') {
+    const viewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`;
     return (
       <div className="w-full bg-white rounded-lg overflow-hidden shadow-inner min-h-[70vh]">
         <iframe 
-          src={url} 
+          src={viewerUrl}
           title="Document Viewer"
           className="w-full h-[70vh] border-none"
         />

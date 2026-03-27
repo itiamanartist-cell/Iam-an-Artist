@@ -184,7 +184,7 @@ const Content = () => {
               {previewContent.type === 'Video' ? (
                 <video src={previewContent.url} controls autoPlay style={{ width: '100%', maxHeight: '70vh' }} />
               ) : previewContent.type === 'Document' ? (
-                <iframe src={previewContent.url} title={previewContent.title} style={{ width: '100%', height: '70vh', border: 'none', background: '#fff' }} />
+                <iframe src={`https://docs.google.com/gview?url=${encodeURIComponent(previewContent.url)}&embedded=true`} title={previewContent.title} style={{ width: '100%', height: '70vh', border: 'none', background: '#fff' }} />
               ) : (
                 <img src={previewContent.url} alt={previewContent.title} style={{ width: '100%', maxHeight: '70vh', objectFit: 'contain' }} />
               )}
