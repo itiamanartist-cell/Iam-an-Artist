@@ -2,7 +2,7 @@ import axios from 'axios';
 import useAuthStore from '../store/useAuthStore';
 
 const instance = axios.create({
-  baseURL: 'http://localhost:5000/api', // Depending on your backend URL
+  baseURL: 'https://iam-an-artist.onrender.com/api', // Pointing to live backend
 });
 
 instance.interceptors.request.use(
