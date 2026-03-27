@@ -12,6 +12,9 @@ const Content = () => {
   const [uploading, setUploading] = useState(false);
   const [previewContent, setPreviewContent] = useState(null);
 
+  const getToken = () => { try { return JSON.parse(localStorage.getItem('auth-storage'))?.state?.token || ''; } catch(_) { return ''; } };
+  const getStreamUrl = (id) => `https://iam-an-artist-backend.onrender.com/api/content/${id}/stream?token=${getToken()}`;
+
   const fetchData = async () => {
     try {
       const [contentRes, catRes] = await Promise.all([axios.get('/content'), axios.get('/categories')]);
@@ -184,7 +187,7 @@ const Content = () => {
               {previewContent.type === 'Video' ? (
                 <video src={previewContent.url} controls autoPlay style={{ width: '100%', maxHeight: '70vh' }} />
               ) : previewContent.type === 'Document' ? (
-                <iframe src={`https://docs.google.com/gview?url=${encodeURIComponent(previewContent.url)}&embedded=true`} title={previewContent.title} style={{ width: '100%', height: '70vh', border: 'none', background: '#fff' }} />
+                <iframe src={getStreamUrl(previewContent._id)} title={previewContent.title} style={{ width: '100%', height: '70vh', border: 'none', background: '#fff' }} />
               ) : (
                 <img src={previewContent.url} alt={previewContent.title} style={{ width: '100%', maxHeight: '70vh', objectFit: 'contain' }} />
               )}

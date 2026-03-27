@@ -74,7 +74,7 @@ const Viewer = () => {
           background: '#fff', borderRadius: '1.25rem',
           overflow: 'hidden', boxShadow: '0 8px 30px rgba(107,33,168,0.12)'
         }}>
-          <SecurePlayer url={content.url} type={content.type} />
+          <SecurePlayer url={content.url} type={content.type} contentId={content._id} />
         </div>
 
         {/* Description */}

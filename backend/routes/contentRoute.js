@@ -36,6 +36,39 @@ router.get('/', verifyToken, async (req, res) => {
   }
 });
 
+// @desc    Stream a document/pdf through backend proxy (avoids CORS issues)
+// @route   GET /api/content/:id/stream
+router.get('/:id/stream', async (req, res) => {
+  // Accept token from query param since iframe can't set Authorization header
+  const token = req.query.token;
+  if (!token) return res.status(401).json({ message: 'No token' });
+
+  const jwt = require('jsonwebtoken');
+  try {
+    jwt.verify(token, process.env.JWT_SECRET || 'temporary_jwt_secret_render_key_123');
+  } catch (_) {
+    return res.status(401).json({ message: 'Invalid token' });
+  }
+
+  try {
+    const content = await Content.findById(req.params.id);
+    if (!content || content.type !== 'Document') return res.status(404).json({ message: 'Not found' });
+
+    const https = require('https');
+    const http = require('http');
+    const fileUrl = content.url;
+    const protocol = fileUrl.startsWith('https') ? https : http;
+
+    protocol.get(fileUrl, (stream) => {
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', 'inline; filename="document.pdf"');
+      stream.pipe(res);
+    }).on('error', () => res.status(500).json({ message: 'Stream error' }));
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // @desc    Get single content and log view
 // @route   GET /api/content/:id
 router.get('/:id', verifyToken, async (req, res) => {

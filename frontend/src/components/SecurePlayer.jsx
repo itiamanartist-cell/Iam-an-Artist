@@ -16,13 +16,18 @@ const SecurePlayer = ({ url, type }) => {
   }, []);
 
   if (type === 'Document') {
-    const viewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`;
+    // Use backend streaming proxy to avoid Cloudinary CORS/auth issues
+    // Extract content ID from the URL path, or use the contentId prop
+    const token = (() => { try { return JSON.parse(localStorage.getItem('auth-storage'))?.state?.token; } catch(_) { return ''; } })();
+    const streamUrl = contentId 
+      ? `https://iam-an-artist-backend.onrender.com/api/content/${contentId}/stream?token=${token}`
+      : url;
     return (
-      <div className="w-full bg-white rounded-lg overflow-hidden shadow-inner min-h-[70vh]">
+      <div className="w-full bg-white rounded-lg overflow-hidden shadow-inner" style={{ minHeight: '70vh' }}>
         <iframe 
-          src={viewerUrl}
+          src={streamUrl}
           title="Document Viewer"
-          className="w-full h-[70vh] border-none"
+          style={{ width: '100%', height: '75vh', border: 'none' }}
         />
       </div>
     );
