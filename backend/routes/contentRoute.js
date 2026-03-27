@@ -54,12 +54,13 @@ router.post('/', verifyToken, isAdmin, upload.single('file'), async (req, res) =
   }
 
   try {
-    // Determine resource type based on selected type
-    const resource_type = type === 'Video' ? 'video' : type === 'Document' ? 'auto' : 'image';
-    
+    const resource_type = type === 'Video' ? 'video' : 'image';
+    const uploadOptions = { resource_type, folder: 'secure-art-platform' };
+    if (type === 'Document') uploadOptions.format = 'pdf'; // Forces .pdf extension for browser rendering
+
     // Upload to Cloudinary via stream
     const uploadStream = cloudinary.uploader.upload_stream(
-      { resource_type, folder: 'secure-art-platform' },
+      uploadOptions,
       async (error, result) => {
         if (error) {
           console.error(error);
