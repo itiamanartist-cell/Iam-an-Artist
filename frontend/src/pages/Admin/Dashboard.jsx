@@ -26,7 +26,7 @@ const Dashboard = () => {
   }, []);
 
   const cards = [
-    { label: 'Total Students', value: stats.users, icon: <Users size={28} />, bg: 'linear-gradient(135deg,#7c3aed,#4c1d95)', accent: '#c4b5fd' },
+    { label: 'Total Users', value: stats.users, icon: <Users size={28} />, bg: 'linear-gradient(135deg,#7c3aed,#4c1d95)', accent: '#c4b5fd' },
     { label: 'Total Content', value: stats.content, icon: <Video size={28} />, bg: 'linear-gradient(135deg,#166534,#052e16)', accent: '#86efac' },
     { label: 'Views Today', value: stats.views, icon: <Eye size={28} />, bg: 'linear-gradient(135deg,#1e3a5f,#0f172a)', accent: '#93c5fd' },
   ];

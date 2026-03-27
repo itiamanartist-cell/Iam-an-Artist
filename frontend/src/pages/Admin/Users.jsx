@@ -46,7 +46,7 @@ const Users = () => {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h1 style={{ margin: 0, color: 'var(--brand-purple-dk)' }}>User Management</h1>
-          <p style={{ margin: '0.2rem 0 0', color: '#7c3aed', fontSize: '0.85rem' }}>{users.length} registered student{users.length !== 1 ? 's' : ''}</p>
+          <p style={{ margin: '0.2rem 0 0', color: '#7c3aed', fontSize: '0.85rem' }}>{users.length} registered user{users.length !== 1 ? 's' : ''}</p>
         </div>
         <button className="btn-primary" onClick={() => setShowModal(true)} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <UserPlus size={16} /> Add User
@@ -99,7 +99,7 @@ const Users = () => {
             <form onSubmit={handleCreate} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#3B0764', marginBottom: '0.35rem' }}>Username</label>
-                <input required type="text" className="form-input" value={formData.username} onChange={e => setFormData({ ...formData, username: e.target.value })} placeholder="student_name" />
+                <input required type="text" className="form-input" value={formData.username} onChange={e => setFormData({ ...formData, username: e.target.value })} placeholder="username" />
               </div>
               <div>
                 <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#3B0764', marginBottom: '0.35rem' }}>Password</label>
