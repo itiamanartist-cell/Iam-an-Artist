@@ -15,6 +15,18 @@ const SecurePlayer = ({ url, type }) => {
     };
   }, []);
 
+  if (type === 'Document') {
+    return (
+      <div className="w-full bg-white rounded-lg overflow-hidden shadow-inner min-h-[70vh]">
+        <iframe 
+          src={url} 
+          title="Document Viewer"
+          className="w-full h-[70vh] border-none"
+        />
+      </div>
+    );
+  }
+
   if (type === 'Video') {
     return (
       <div className="relative bg-black w-full rounded-lg overflow-hidden flex items-center justify-center aspect-video">

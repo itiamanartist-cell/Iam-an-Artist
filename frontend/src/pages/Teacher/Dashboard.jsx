@@ -91,9 +91,14 @@ const Dashboard = () => {
         {filtered.map(item => (
           <div key={item._id} className="card">
             {/* Thumbnail */}
-            <div style={{ background: item.type === 'Video' ? '#0f172a' : '#f3e8ff', position: 'relative', overflow: 'hidden', minHeight: 190, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ background: item.type === 'Video' ? '#0f172a' : item.type === 'Document' ? '#e0f2fe' : '#f3e8ff', position: 'relative', overflow: 'hidden', minHeight: 190, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               {item.type === 'Image' ? (
                 <img src={item.url} alt={item.title} style={{ width: '100%', objectFit: 'contain', maxHeight: 240, display: 'block' }} onContextMenu={e => e.preventDefault()} />
+              ) : item.type === 'Document' ? (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', color: '#0369a1' }}>
+                  <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>PDF Document</span>
+                </div>
               ) : (
                 <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <img src={item.url.replace(/\.[^/.]+$/, ".jpg")} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0, opacity: 0.6 }} />
@@ -102,7 +107,7 @@ const Dashboard = () => {
               )}
               {/* Badges */}
               <div style={{ position: 'absolute', top: 8, left: 8, display: 'flex', gap: '0.4rem', flexWrap: 'wrap', zIndex: 10 }}>
-                <span className={`badge ${item.type === 'Video' ? 'badge-purple' : 'badge-green'}`} style={{ backdropFilter: 'blur(4px)' }}>
+                <span className={`badge ${item.type === 'Video' ? 'badge-purple' : item.type === 'Document' ? 'badge-blue' : 'badge-green'}`} style={{ backdropFilter: 'blur(4px)' }}>
                   {item.type}
                 </span>
                 {item.category && (

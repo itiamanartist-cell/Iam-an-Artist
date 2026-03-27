@@ -55,7 +55,7 @@ router.post('/', verifyToken, isAdmin, upload.single('file'), async (req, res) =
 
   try {
     // Determine resource type based on selected type
-    const resource_type = type === 'Video' ? 'video' : 'image';
+    const resource_type = type === 'Video' ? 'video' : type === 'Document' ? 'auto' : 'image';
     
     // Upload to Cloudinary via stream
     const uploadStream = cloudinary.uploader.upload_stream(

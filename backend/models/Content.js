@@ -10,7 +10,7 @@ const contentSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['Video', 'Image'],
+    enum: ['Video', 'Image', 'Document'],
     required: true,
   },
   url: {

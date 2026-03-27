@@ -72,13 +72,18 @@ const Content = () => {
         {contentList.map(c => (
           <div key={c._id} className="card">
             {/* Thumbnail */}
-            <div style={{ background: c.type === 'Video' ? '#0f172a' : '#f3e8ff', height: 160, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ background: c.type === 'Video' ? '#0f172a' : c.type === 'Document' ? '#e0f2fe' : '#f3e8ff', height: 160, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
               {c.type === 'Image' ? (
                 <img src={c.url} alt={c.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} onContextMenu={e => e.preventDefault()} />
+              ) : c.type === 'Document' ? (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', color: '#0369a1' }}>
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                  <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>PDF Document</span>
+                </div>
               ) : (
                 <img src={c.url.replace(/\.[^/.]+$/, ".jpg")} alt={c.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onContextMenu={e => e.preventDefault()} />
               )}
-              <span style={{ position: 'absolute', top: 8, right: 8 }} className={`badge ${c.type === 'Video' ? 'badge-purple' : 'badge-green'}`}>
+              <span style={{ position: 'absolute', top: 8, right: 8 }} className={`badge ${c.type === 'Video' ? 'badge-purple' : c.type === 'Document' ? 'badge-blue' : 'badge-green'}`}>
                 {c.type}
               </span>
             </div>
@@ -129,6 +134,7 @@ const Content = () => {
                   <select className="form-input" value={formData.type} onChange={e => setFormData({ ...formData, type: e.target.value })}>
                     <option value="Video">Video</option>
                     <option value="Image">Image</option>
+                    <option value="Document">PDF Document</option>
                   </select>
                 </div>
                 <div>
@@ -145,7 +151,7 @@ const Content = () => {
                 <div style={{ border: '2px dashed #c4b5fd', borderRadius: '0.75rem', padding: '1.25rem', textAlign: 'center', background: '#faf5ff', cursor: 'pointer' }}>
                   <input
                     required type="file"
-                    accept={formData.type === 'Video' ? 'video/*' : 'image/*'}
+                    accept={formData.type === 'Video' ? 'video/*' : formData.type === 'Document' ? 'application/pdf' : 'image/*'}
                     onChange={e => setFile(e.target.files[0])}
                     style={{ width: '100%' }}
                   />
@@ -174,9 +180,11 @@ const Content = () => {
               <h3 style={{ margin: 0, color: 'var(--brand-purple-dk)' }}>{previewContent.title}</h3>
               <button onClick={() => setPreviewContent(null)} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: '#64748b' }}>&times;</button>
             </div>
-            <div style={{ background: '#000', display: 'flex', justifyContent: 'center' }}>
+            <div style={{ background: '#000', display: 'flex', justifyContent: 'center', width: '100%' }}>
               {previewContent.type === 'Video' ? (
                 <video src={previewContent.url} controls autoPlay style={{ width: '100%', maxHeight: '70vh' }} />
+              ) : previewContent.type === 'Document' ? (
+                <iframe src={previewContent.url} title={previewContent.title} style={{ width: '100%', height: '70vh', border: 'none', background: '#fff' }} />
               ) : (
                 <img src={previewContent.url} alt={previewContent.title} style={{ width: '100%', maxHeight: '70vh', objectFit: 'contain' }} />
               )}
