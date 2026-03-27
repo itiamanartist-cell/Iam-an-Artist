@@ -5,12 +5,32 @@ const AnalyticsLog = require('../models/AnalyticsLog');
 const { verifyToken, isAdmin } = require('../middleware/auth');
 const cloudinary = require('../config/cloudinary');
 
+// Helper: generate a signed expiring Cloudinary URL (60s)
+const getSignedUrl = (content) => {
+  try {
+    if (!content.public_id) return content.url;
+    const resource_type = content.type === 'Video' ? 'video' : content.type === 'Document' ? 'raw' : 'image';
+    return cloudinary.url(content.public_id, {
+      resource_type,
+      sign_url: true,
+      type: 'upload',
+      expires_at: Math.floor(Date.now() / 1000) + 60 // expires in 60 seconds
+    });
+  } catch (_) {
+    return content.url;
+  }
+};
+
 // @desc    Get all content (Students can view authorized content, so this is available for all authenticated users)
 // @route   GET /api/content
 router.get('/', verifyToken, async (req, res) => {
   try {
-    const content = await Content.find({}).populate('category', 'name').sort({ createdAt: -1 });
-    res.json(content);
+    const contents = await Content.find({}).populate('category', 'name').sort({ createdAt: -1 });
+    const signed = contents.map(c => ({
+      ...c.toObject(),
+      url: getSignedUrl(c)
+    }));
+    res.json(signed);
   } catch (error) {
     res.status(500).json({ message: 'Server Error' });
   }
@@ -22,13 +42,10 @@ router.get('/:id', verifyToken, async (req, res) => {
   try {
     const content = await Content.findById(req.params.id).populate('category', 'name');
     if (content) {
-      // Log analytics
-      await AnalyticsLog.create({
-        user: req.user._id,
-        action: 'ViewContent',
-        contentId: content._id
-      });
-      res.json(content);
+      await AnalyticsLog.create({ user: req.user._id, action: 'ViewContent', contentId: content._id });
+      const obj = content.toObject();
+      obj.url = getSignedUrl(content);
+      res.json(obj);
     } else {
       res.status(404).json({ message: 'Content not found' });
     }
@@ -55,8 +72,7 @@ router.post('/', verifyToken, isAdmin, upload.single('file'), async (req, res) =
 
   try {
     const resource_type = type === 'Video' ? 'video' : 'image';
-    const uploadOptions = { resource_type, folder: 'secure-art-platform' };
-    if (type === 'Document') uploadOptions.format = 'pdf'; // Forces .pdf extension for browser rendering
+    const uploadOptions = { resource_type: type === 'Document' ? 'raw' : resource_type, folder: 'secure-art-platform' };
 
     // Upload to Cloudinary via stream
     const uploadStream = cloudinary.uploader.upload_stream(
